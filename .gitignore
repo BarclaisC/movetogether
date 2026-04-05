@@ -1,0 +1,20 @@
+# Dépendances PHP (Composer)
+vendor/
+
+# Fichiers d'environnement (variables sensibles)
+.env
+.env.local
+
+# Fichiers système inutiles
+.DS_Store
+Thumbs.db
+
+# Config éditeurs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Cache éventuel
+cache/
