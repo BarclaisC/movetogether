@@ -1,54 +1,81 @@
--- -----------------------------------------------------
 -- Base de données : movetogether
--- -----------------------------------------------------
-CREATE DATABASE IF NOT EXISTS movetogether CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE movetogether;
 
--- -----------------------------------------------------
--- Table : users
--- -----------------------------------------------------
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL DEFAULT 'user',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- Données de test (mot de passe : test123)
-INSERT INTO users (email, password, role) VALUES
-('admin@mvt.com', '$2y$10$8bqY0u8rjv1u8Ygk0j8r8u8Ygk0j8r8u8Ygk0j8r8u8Ygk0j8r8u', 'admin'),
-('user@mvt.com', '$2y$10$8bqY0u8rjv1u8Ygk0j8r8u8Ygk0j8r8u8Ygk0j8r8u8Ygk0j8r8u', 'user');
+-- --------------------------------------------------------
+-- TABLE : agences
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table : trajets
--- -----------------------------------------------------
-CREATE TABLE trajets (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    ville_depart VARCHAR(255) NOT NULL,
-    ville_arrivee VARCHAR(255) NOT NULL,
-    date_trajet DATE NOT NULL,
-    heure_trajet TIME NOT NULL,
-    places INT NOT NULL,
-    prix DECIMAL(10,2) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
+DROP TABLE IF EXISTS `agences`;
+CREATE TABLE `agences` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(150) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Données de test
-INSERT INTO trajets (ville_depart, ville_arrivee, date_trajet, heure_trajet, places, prix) VALUES
-('Paris', 'Lyon', '2026-04-10', '08:00:00', 3, 29.90),
-('Marseille', 'Nice', '2026-04-12', '14:30:00', 2, 15.00),
-('Bordeaux', 'Toulouse', '2026-04-15', '09:15:00', 4, 19.50);
+INSERT INTO `agences` (`id`, `nom`) VALUES
+(1, 'Paris Gare de Lyon'),
+(2, 'Paris Montparnasse'),
+(3, 'Lyon Part-Dieu'),
+(4, 'Marseille Saint-Charles'),
+(5, 'Bordeaux Saint-Jean');
 
--- -----------------------------------------------------
--- Table : reservations (optionnelle)
--- -----------------------------------------------------
-CREATE TABLE reservations (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    trajet_id INT NOT NULL,
-    places INT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (trajet_id) REFERENCES trajets(id) ON DELETE CASCADE
-);
+-- --------------------------------------------------------
+-- TABLE : users
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(100) NOT NULL,
+  `prenom` varchar(100) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `telephone` varchar(20) DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('user','admin') DEFAULT 'user',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `users` (`id`, `nom`, `prenom`, `email`, `telephone`, `password`, `role`) VALUES
+(1, 'Admin', 'Super', 'admin@movetogether.fr', '0600000000', '$2y$10$8PA2.b5UT0w59vRtbPTXsuA0cKiQVGLO3UTrCBKysEuk07mcrQSC.', 'admin'),
+(2, 'Dupont', 'Marie', 'marie.dupont@example.com', '0612345678', '$2y$10$EPsXOQSYSCAdy7ZE7mHPr.MWbo2JwJpuietseKpqMRRZTyQdUBIna', 'user'),
+(3, 'Martin', 'Lucas', 'lucas.martin@example.com', '0698765432', '$2y$10$pneeQDLh2xsV98AB.35K2e5hpUz9kLvSFL8v7V7UgOZp5mgZjYd/y', 'user');
+
+-- --------------------------------------------------------
+-- TABLE : trajets
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `trajets`;
+CREATE TABLE `trajets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `agence_depart_id` int(11) NOT NULL,
+  `agence_arrivee_id` int(11) NOT NULL,
+  `date_depart` datetime NOT NULL,
+  `date_arrivee` datetime NOT NULL,
+  `places_total` int(11) NOT NULL,
+  `places_disponibles` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_trajets_user` (`user_id`),
+  KEY `fk_trajets_agence_depart` (`agence_depart_id`),
+  KEY `fk_trajets_agence_arrivee` (`agence_arrivee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `trajets` (`id`, `agence_depart_id`, `agence_arrivee_id`, `date_depart`, `date_arrivee`, `places_total`, `places_disponibles`, `user_id`) VALUES
+(1, 1, 3, '2026-04-10 08:00:00', '2026-04-10 12:00:00', 4, 4, 2),
+(2, 2, 4, '2026-04-12 09:30:00', '2026-04-12 15:00:00', 3, 2, 3),
+(3, 5, 1, '2026-04-15 14:00:00', '2026-04-15 18:00:00', 5, 5, 2);
+
+-- --------------------------------------------------------
+-- FOREIGN KEYS
+-- --------------------------------------------------------
+
+ALTER TABLE `trajets`
+  ADD CONSTRAINT `fk_trajets_agence_arrivee` FOREIGN KEY (`agence_arrivee_id`) REFERENCES `agences` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_trajets_agence_depart` FOREIGN KEY (`agence_depart_id`) REFERENCES `agences` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_trajets_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+COMMIT;

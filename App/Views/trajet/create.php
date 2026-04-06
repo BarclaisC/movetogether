@@ -1,4 +1,4 @@
-<?php use App\Core\Auth; ?>
+<?php $this->title = "Créer un trajet"; ?>
 
 <div class="container mt-4" style="max-width: 700px;">
 
@@ -23,7 +23,8 @@
             <select name="agence_depart_id" class="form-select" required>
                 <option value="">Sélectionner...</option>
                 <?php foreach ($agences as $agence): ?>
-                    <option value="<?= $agence['id'] ?>">
+                    <option value="<?= $agence['id'] ?>"
+                        <?= isset($_POST['agence_depart_id']) && $_POST['agence_depart_id'] == $agence['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($agence['nom']) ?>
                     </option>
                 <?php endforeach; ?>
@@ -36,7 +37,8 @@
             <select name="agence_arrivee_id" class="form-select" required>
                 <option value="">Sélectionner...</option>
                 <?php foreach ($agences as $agence): ?>
-                    <option value="<?= $agence['id'] ?>">
+                    <option value="<?= $agence['id'] ?>"
+                        <?= isset($_POST['agence_arrivee_id']) && $_POST['agence_arrivee_id'] == $agence['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($agence['nom']) ?>
                     </option>
                 <?php endforeach; ?>
@@ -50,6 +52,7 @@
                 type="datetime-local" 
                 name="date_depart" 
                 class="form-control"
+                value="<?= $_POST['date_depart'] ?? '' ?>"
                 required
             >
         </div>
@@ -61,6 +64,7 @@
                 type="datetime-local" 
                 name="date_arrivee" 
                 class="form-control"
+                value="<?= $_POST['date_arrivee'] ?? '' ?>"
                 required
             >
         </div>
@@ -73,13 +77,14 @@
                 name="places_total" 
                 class="form-control"
                 min="1"
+                value="<?= $_POST['places_total'] ?? '' ?>"
                 required
             >
         </div>
 
         <!-- Bouton -->
         <button type="submit" class="btn btn-primary w-100">
-            Créer le trajet
+            🚗 Créer le trajet
         </button>
 
     </form>

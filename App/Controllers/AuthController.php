@@ -8,9 +8,12 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
+    /**
+     * Connexion utilisateur
+     */
     public function login()
     {
-        // Si déjà connecté → redirection selon rôle
+        // Déjà connecté → redirection selon rôle
         if (Session::get('user')) {
             $user = Session::get('user');
 
@@ -22,18 +25,28 @@ class AuthController extends Controller
             exit;
         }
 
+        // Traitement du formulaire
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            // Nettoyage des entrées
-            $email = trim($_POST['email']);
-            $password = trim($_POST['password']);
+            $email = strtolower(trim($_POST['email'] ?? ''));
+            $password = trim($_POST['password'] ?? '');
 
+            // Vérification des champs obligatoires
+            if (empty($email) || empty($password)) {
+                $this->render('auth/login', [
+                    'error' => 'Veuillez remplir tous les champs.',
+                    'email' => $email
+                ]);
+                return;
+            }
+
+            // Tentative de connexion
             $user = (new User())->login($email, $password);
 
             if ($user) {
                 Session::set('user', $user);
 
-                // 🔥 Redirection selon le rôle
+                // Redirection selon rôle
                 if ($user['role'] === 'admin') {
                     header('Location: index.php?page=admin');
                 } else {
@@ -42,9 +55,10 @@ class AuthController extends Controller
                 exit;
             }
 
-            // Erreur → renvoi du formulaire
+            // Identifiants incorrects
             $this->render('auth/login', [
-                'error' => 'Identifiants incorrects'
+                'error' => 'Identifiants incorrects.',
+                'email' => $email
             ]);
             return;
         }
@@ -53,6 +67,9 @@ class AuthController extends Controller
         $this->render('auth/login');
     }
 
+    /**
+     * Déconnexion
+     */
     public function logout()
     {
         Session::destroy();

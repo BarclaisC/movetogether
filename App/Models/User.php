@@ -12,6 +12,12 @@ class User
      */
     public function login(string $email, string $password): ?array
     {
+        $email = strtolower(trim($email));
+
+        if ($email === '' || $password === '') {
+            return null;
+        }
+
         $pdo = Database::getConnection();
 
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
@@ -32,10 +38,17 @@ class User
      */
     public function find(int $id): ?array
     {
+        if (!$id) {
+            return null;
+        }
+
         $pdo = Database::getConnection();
 
-        $stmt = $pdo->prepare("SELECT id, nom, prenom, email, telephone, role 
-                               FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("
+            SELECT id, nom, prenom, email, telephone, role 
+            FROM users 
+            WHERE id = ?
+        ");
         $stmt->execute([$id]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -50,32 +63,47 @@ class User
     {
         $pdo = Database::getConnection();
 
-        $sql = "SELECT id, nom, prenom, email, telephone, role 
-                FROM users 
-                ORDER BY nom ASC";
+        $sql = "
+            SELECT id, nom, prenom, email, telephone, role 
+            FROM users 
+            ORDER BY nom ASC
+        ";
 
         return $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Création d’un utilisateur (optionnel, utile pour seed.sql)
+     * Création d’un utilisateur (optionnel)
      */
     public function create(array $data): bool
     {
         $pdo = Database::getConnection();
 
-        $sql = "INSERT INTO users (nom, prenom, email, telephone, password, role)
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $nom = trim($data['nom']);
+        $prenom = trim($data['prenom']);
+        $email = strtolower(trim($data['email']));
+        $telephone = trim($data['telephone']);
+        $password = trim($data['password']);
+        $role = $data['role'] ?? 'user';
+
+        if ($nom === '' || $prenom === '' || $email === '' || $password === '') {
+            return false;
+        }
+
+        $sql = "
+            INSERT INTO users (nom, prenom, email, telephone, password, role)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ";
 
         $stmt = $pdo->prepare($sql);
 
         return $stmt->execute([
-            $data['nom'],
-            $data['prenom'],
-            $data['email'],
-            $data['telephone'],
-            password_hash($data['password'], PASSWORD_DEFAULT),
-            $data['role'] ?? 'user'
+            $nom,
+            $prenom,
+            $email,
+            $telephone,
+            password_hash($password, PASSWORD_DEFAULT),
+            $role
         ]);
     }
 }

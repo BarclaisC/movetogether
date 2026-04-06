@@ -1,11 +1,3 @@
-<?php
-// Sécurisation : accès réservé aux administrateurs
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
-    header('Location: index.php?page=login');
-    exit;
-}
-?>
-
 <div class="container mt-4">
 
     <h1 class="mb-4">Tableau de bord administrateur</h1>

@@ -24,6 +24,10 @@ class Agence
      */
     public function find(int $id): ?array
     {
+        if (!$id) {
+            return null;
+        }
+
         $pdo = Database::getConnection();
 
         $stmt = $pdo->prepare("SELECT * FROM agences WHERE id = ?");
@@ -39,6 +43,12 @@ class Agence
      */
     public function create(string $nom): bool
     {
+        $nom = trim($nom);
+
+        if ($nom === '') {
+            return false;
+        }
+
         $pdo = Database::getConnection();
 
         $stmt = $pdo->prepare("INSERT INTO agences (nom) VALUES (?)");
@@ -51,6 +61,16 @@ class Agence
      */
     public function update(int $id, string $nom): bool
     {
+        if (!$id) {
+            return false;
+        }
+
+        $nom = trim($nom);
+
+        if ($nom === '') {
+            return false;
+        }
+
         $pdo = Database::getConnection();
 
         $stmt = $pdo->prepare("UPDATE agences SET nom = ? WHERE id = ?");
@@ -63,6 +83,10 @@ class Agence
      */
     public function delete(int $id): bool
     {
+        if (!$id) {
+            return false;
+        }
+
         $pdo = Database::getConnection();
 
         $stmt = $pdo->prepare("DELETE FROM agences WHERE id = ?");

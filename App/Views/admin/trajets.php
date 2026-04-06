@@ -1,6 +1,6 @@
 <div class="container mt-4">
 
-    <h1 class="mb-4">Liste des trajets</h1>
+    <h1 class="mb-4">Gestion des trajets</h1>
 
     <?php if (empty($trajets)): ?>
 
@@ -42,15 +42,24 @@
                                 <?= htmlspecialchars($trajet['prenom'] . ' ' . $trajet['nom']) ?>
                             </td>
 
-                            <td><?= $trajet['places_total'] ?></td>
-                            <td><?= $trajet['places_disponibles'] ?></td>
+                            <td>
+                                <span class="badge bg-secondary">
+                                    <?= $trajet['places_total'] ?>
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-success">
+                                    <?= $trajet['places_disponibles'] ?>
+                                </span>
+                            </td>
 
                             <td class="text-center">
 
                                 <a href="index.php?page=admin-trajet-delete&id=<?= $trajet['id'] ?>"
                                    class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Supprimer ce trajet ?')">
-                                    Supprimer
+                                   onclick="return confirm('Supprimer le trajet <?= htmlspecialchars($trajet['depart']) ?> → <?= htmlspecialchars($trajet['arrivee']) ?> ?')">
+                                    🗑 Supprimer
                                 </a>
 
                             </td>

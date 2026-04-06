@@ -12,8 +12,10 @@ class AdminController extends Controller
 {
     public function __construct()
     {
+        // Protection ADMIN propre
         if (!Auth::isAdmin()) {
-            die("Accès réservé à l'administrateur.");
+            header('Location: index.php?page=home');
+            exit;
         }
     }
 
@@ -79,11 +81,17 @@ class AdminController extends Controller
     {
         $id = $_GET['id'] ?? null;
 
+        if (!$id) {
+            header('Location: index.php?page=admin-agences');
+            exit;
+        }
+
         $agenceModel = new Agence();
         $agence = $agenceModel->find($id);
 
         if (!$agence) {
-            die("Agence introuvable.");
+            header('Location: index.php?page=admin-agences');
+            exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -114,9 +122,23 @@ class AdminController extends Controller
     {
         $id = $_GET['id'] ?? null;
 
-        (new Agence())->delete($id);
+        if (!$id) {
+            header('Location: index.php?page=admin-agences');
+            exit;
+        }
+
+        $agenceModel = new Agence();
+        $agence = $agenceModel->find($id);
+
+        if (!$agence) {
+            header('Location: index.php?page=admin-agences');
+            exit;
+        }
+
+        $agenceModel->delete($id);
 
         header('Location: index.php?page=admin-agences');
+        exit;
     }
 
     /**
@@ -138,8 +160,22 @@ class AdminController extends Controller
     {
         $id = $_GET['id'] ?? null;
 
-        (new Trajet())->delete($id);
+        if (!$id) {
+            header('Location: index.php?page=admin-trajets');
+            exit;
+        }
+
+        $trajetModel = new Trajet();
+        $trajet = $trajetModel->find($id);
+
+        if (!$trajet) {
+            header('Location: index.php?page=admin-trajets');
+            exit;
+        }
+
+        $trajetModel->delete($id);
 
         header('Location: index.php?page=admin-trajets');
+        exit;
     }
 }

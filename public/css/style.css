@@ -7,11 +7,22 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     background: #f7f9fc;
     color: #333;
     font-family: "Inter", Arial, sans-serif;
-    padding-bottom: 50px;
+
+    /* Permet au footer de rester en bas */
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* pousse le footer en bas */
 }
 
 /* ============================

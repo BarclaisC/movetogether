@@ -1,4 +1,4 @@
-<?php use App\Core\Auth; ?>
+<?php $this->title = "Modifier un trajet"; ?>
 
 <div class="container mt-4" style="max-width: 700px;">
 
@@ -24,7 +24,7 @@
                 <?php foreach ($agences as $agence): ?>
                     <option 
                         value="<?= $agence['id'] ?>"
-                        <?= $agence['id'] == $trajet['agence_depart_id'] ? 'selected' : '' ?>
+                        <?= (isset($_POST['agence_depart_id']) ? $_POST['agence_depart_id'] : $trajet['agence_depart_id']) == $agence['id'] ? 'selected' : '' ?>
                     >
                         <?= htmlspecialchars($agence['nom']) ?>
                     </option>
@@ -39,7 +39,7 @@
                 <?php foreach ($agences as $agence): ?>
                     <option 
                         value="<?= $agence['id'] ?>"
-                        <?= $agence['id'] == $trajet['agence_arrivee_id'] ? 'selected' : '' ?>
+                        <?= (isset($_POST['agence_arrivee_id']) ? $_POST['agence_arrivee_id'] : $trajet['agence_arrivee_id']) == $agence['id'] ? 'selected' : '' ?>
                     >
                         <?= htmlspecialchars($agence['nom']) ?>
                     </option>
@@ -54,7 +54,7 @@
                 type="datetime-local" 
                 name="date_depart" 
                 class="form-control"
-                value="<?= date('Y-m-d\TH:i', strtotime($trajet['date_depart'])) ?>"
+                value="<?= isset($_POST['date_depart']) ? $_POST['date_depart'] : date('Y-m-d\TH:i', strtotime($trajet['date_depart'])) ?>"
                 required
             >
         </div>
@@ -66,7 +66,7 @@
                 type="datetime-local" 
                 name="date_arrivee" 
                 class="form-control"
-                value="<?= date('Y-m-d\TH:i', strtotime($trajet['date_arrivee'])) ?>"
+                value="<?= isset($_POST['date_arrivee']) ? $_POST['date_arrivee'] : date('Y-m-d\TH:i', strtotime($trajet['date_arrivee'])) ?>"
                 required
             >
         </div>
@@ -79,7 +79,7 @@
                 name="places_total" 
                 class="form-control"
                 min="1"
-                value="<?= $trajet['places_total'] ?>"
+                value="<?= isset($_POST['places_total']) ? $_POST['places_total'] : htmlspecialchars($trajet['places_total']) ?>"
                 required
             >
         </div>
@@ -92,16 +92,22 @@
                 name="places_disponibles" 
                 class="form-control"
                 min="0"
-                max="<?= $trajet['places_total'] ?>"
-                value="<?= $trajet['places_disponibles'] ?>"
+                max="<?= htmlspecialchars($trajet['places_total']) ?>"
+                value="<?= isset($_POST['places_disponibles']) ? $_POST['places_disponibles'] : htmlspecialchars($trajet['places_disponibles']) ?>"
                 required
             >
         </div>
 
-        <!-- Bouton -->
-        <button type="submit" class="btn btn-primary w-100">
-            Enregistrer les modifications
-        </button>
+        <!-- Boutons -->
+        <div class="d-flex gap-2">
+            <a href="index.php?page=trajets" class="btn btn-secondary w-50">
+                ← Retour
+            </a>
+
+            <button type="submit" class="btn btn-primary w-50">
+                💾 Enregistrer
+            </button>
+        </div>
 
     </form>
 

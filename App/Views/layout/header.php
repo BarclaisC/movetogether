@@ -6,22 +6,30 @@
 
         <!-- Logo -->
         <div class="h4 m-0">
-            <?php if (Auth::isAdmin()): ?>
+            <?php if (!Auth::check()): ?>
+                <a href="index.php?page=home" class="text-white text-decoration-none">
+                    MoveTogether
+                </a>
+
+            <?php elseif (Auth::isAdmin()): ?>
                 <a href="index.php?page=admin" class="text-white text-decoration-none">
                     MoveTogether
                 </a>
+
             <?php else: ?>
-                <span>MoveTogether</span>
+                <a href="index.php?page=trajets" class="text-white text-decoration-none">
+                    MoveTogether
+                </a>
             <?php endif; ?>
         </div>
 
         <!-- Bouton burger (mobile) -->
-        <button class="burger d-md-none" onclick="toggleMenu()">
+        <button class="burger d-md-none" onclick="toggleMenu()" aria-label="Menu">
             ☰
         </button>
 
         <!-- Navigation -->
-        <nav id="navLinks" class="d-flex align-items-center gap-3 flex-column flex-md-row mobile-menu">
+        <nav id="navLinks" class="nav-links d-flex align-items-center gap-3 flex-column flex-md-row">
 
             <?php if (!Auth::check()): ?>
 
@@ -33,9 +41,9 @@
             <?php elseif (Auth::isAdmin()): ?>
 
                 <!-- Administrateur -->
-                <a href="index.php?page=admin-users" class="btn btn-light w-100 w-md-auto">Utilisateurs</a>
-                <a href="index.php?page=admin-agences" class="btn btn-light w-100 w-md-auto">Agences</a>
-                <a href="index.php?page=admin-trajets" class="btn btn-light w-100 w-md-auto">Trajets</a>
+                <a href="index.php?page=admin-users" class="btn btn-light w-100 w-md-auto">👥 Utilisateurs</a>
+                <a href="index.php?page=admin-agences" class="btn btn-light w-100 w-md-auto">🏢 Agences</a>
+                <a href="index.php?page=admin-trajets" class="btn btn-light w-100 w-md-auto">🚗 Trajets</a>
 
                 <a href="index.php?page=logout" class="btn btn-danger w-100 w-md-auto">
                     Déconnexion
@@ -45,11 +53,11 @@
 
                 <!-- Utilisateur connecté -->
                 <a href="index.php?page=trajet-create" class="btn btn-light w-100 w-md-auto">
-                    Proposer un trajet
+                    ➕ Proposer un trajet
                 </a>
 
                 <span class="fw-bold text-center text-md-start">
-                    <?= Auth::user()['prenom'] . ' ' . Auth::user()['nom'] ?>
+                    <?= htmlspecialchars(Auth::user()['prenom'] . ' ' . Auth::user()['nom']) ?>
                 </span>
 
                 <a href="index.php?page=logout" class="btn btn-danger w-100 w-md-auto">

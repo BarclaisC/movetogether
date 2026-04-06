@@ -9,13 +9,12 @@ class Controller
         // Rend les variables accessibles dans la vue
         extract($data);
 
-        // Header
-        require __DIR__ . '/../Views/layout/header.php';
-
-        // Vue principale
+        // On capture le contenu de la vue
+        ob_start();
         require __DIR__ . '/../Views/' . $view . '.php';
+        $content = ob_get_clean();
 
-        // Footer
-        require __DIR__ . '/../Views/layout/footer.php';
+        // On charge le layout global
+        require __DIR__ . '/../Views/layout/layout.php';
     }
 }

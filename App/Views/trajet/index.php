@@ -1,48 +1,82 @@
 <?php $this->title = "Mes trajets"; ?>
 
-<h1 class="mb-4">Mes trajets</h1>
+<div class="container mt-4">
 
-<?php if (empty($trajets)): ?>
-    <p>Aucun trajet pour le moment.</p>
-<?php else: ?>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="m-0">Mes trajets</h1>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Départ</th>
-            <th>Arrivée</th>
-            <th>Date départ</th>
-            <th>Date arrivée</th>
-            <th>Places totales</th>
-            <th>Places dispo</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+        <a href="index.php?page=trajet-create" class="btn btn-success">
+            + Ajouter un trajet
+        </a>
+    </div>
 
-    <tbody>
-        <?php foreach ($trajets as $t): ?>
-        <tr>
-            <td><?= htmlspecialchars($t['depart']) ?></td>
-            <td><?= htmlspecialchars($t['arrivee']) ?></td>
-            <td><?= date('d/m/Y H:i', strtotime($t['date_depart'])) ?></td>
-            <td><?= date('d/m/Y H:i', strtotime($t['date_arrivee'])) ?></td>
-            <td><?= $t['places_total'] ?></td>
-            <td><?= $t['places_disponibles'] ?></td>
+    <?php if (empty($trajets)): ?>
 
-            <td>
-                <a href="index.php?page=trajet-edit&id=<?= $t['id'] ?>" class="btn btn-sm btn-primary">
-                    Modifier
-                </a>
+        <div class="alert alert-info text-center">
+            Aucun trajet pour le moment.
+        </div>
 
-                <a href="index.php?page=trajet-delete&id=<?= $t['id'] ?>"
-                   class="btn btn-sm btn-danger"
-                   onclick="return confirm('Supprimer ce trajet ?');">
-                    Supprimer
-                </a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+    <?php else: ?>
 
-<?php endif; ?>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered shadow-sm align-middle">
+
+                <thead class="table-primary">
+                    <tr>
+                        <th>Départ</th>
+                        <th>Arrivée</th>
+                        <th>Date départ</th>
+                        <th>Date arrivée</th>
+                        <th>Places totales</th>
+                        <th>Places dispo</th>
+                        <th class="text-center" style="width: 160px;">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php foreach ($trajets as $t): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($t['depart']) ?></td>
+                            <td><?= htmlspecialchars($t['arrivee']) ?></td>
+
+                            <td><?= date('d/m/Y H:i', strtotime($t['date_depart'])) ?></td>
+                            <td><?= date('d/m/Y H:i', strtotime($t['date_arrivee'])) ?></td>
+
+                            <td>
+                                <span class="badge bg-secondary">
+                                    <?= $t['places_total'] ?>
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-success">
+                                    <?= $t['places_disponibles'] ?>
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+
+                                <!-- Modifier -->
+                                <a href="index.php?page=trajet-edit&id=<?= $t['id'] ?>"
+                                   class="btn btn-primary btn-sm me-1">
+                                    ✏ Modifier
+                                </a>
+
+                                <!-- Supprimer -->
+                                <a href="index.php?page=trajet-delete&id=<?= $t['id'] ?>"
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Supprimer le trajet <?= htmlspecialchars($t['depart']) ?> → <?= htmlspecialchars($t['arrivee']) ?> ?');">
+                                    🗑 Supprimer
+                                </a>
+
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+
+            </table>
+        </div>
+
+    <?php endif; ?>
+
+</div>

@@ -38,14 +38,14 @@
                                 <!-- Modifier -->
                                 <a href="index.php?page=admin-agence-edit&id=<?= $agence['id'] ?>"
                                    class="btn btn-warning btn-sm me-1">
-                                    Modifier
+                                    ✏ Modifier
                                 </a>
 
                                 <!-- Supprimer -->
                                 <a href="index.php?page=admin-agence-delete&id=<?= $agence['id'] ?>"
                                    class="btn btn-danger btn-sm"
-                                   onclick="return confirm('Supprimer cette agence ?')">
-                                    Supprimer
+                                   onclick="return confirm('Supprimer l’agence « <?= htmlspecialchars($agence['nom']) ?> » ?')">
+                                    🗑 Supprimer
                                 </a>
 
                             </td>

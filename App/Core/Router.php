@@ -2,10 +2,14 @@
 
 namespace App\Core;
 
+use App\Core\Auth;
+
 class Router
 {
     public function run()
     {
+        Session::start();
+
         $page = $_GET['page'] ?? 'home';
 
         switch ($page) {
@@ -15,18 +19,15 @@ class Router
             ============================ */
 
             case 'home':
-                $controller = new \App\Controllers\HomeController();
-                $controller->index();
+                (new \App\Controllers\HomeController())->index();
                 break;
 
             case 'login':
-                $controller = new \App\Controllers\AuthController();
-                $controller->login();
+                (new \App\Controllers\AuthController())->login();
                 break;
 
             case 'logout':
-                $controller = new \App\Controllers\AuthController();
-                $controller->logout();
+                (new \App\Controllers\AuthController())->logout();
                 break;
 
 
@@ -34,24 +35,23 @@ class Router
                TRAJETS (UTILISATEUR)
             ============================ */
 
-            case 'trajets':   // ⭐ AJOUT ESSENTIEL
-                $controller = new \App\Controllers\TrajetController();
-                $controller->index();
-                break;
-
+            case 'trajets':
             case 'trajet-create':
-                $controller = new \App\Controllers\TrajetController();
-                $controller->create();
-                break;
-
             case 'trajet-edit':
-                $controller = new \App\Controllers\TrajetController();
-                $controller->edit();
-                break;
-
             case 'trajet-delete':
+
+                if (!Auth::check()) {
+                    header('Location: index.php?page=login');
+                    exit;
+                }
+
                 $controller = new \App\Controllers\TrajetController();
-                $controller->delete();
+
+                if ($page === 'trajets') $controller->index();
+                if ($page === 'trajet-create') $controller->create();
+                if ($page === 'trajet-edit') $controller->edit();
+                if ($page === 'trajet-delete') $controller->delete();
+
                 break;
 
 
@@ -60,53 +60,40 @@ class Router
             ============================ */
 
             case 'admin':
-                $controller = new \App\Controllers\AdminController();
-                $controller->dashboard();
-                break;
-
             case 'admin-users':
-                $controller = new \App\Controllers\AdminController();
-                $controller->users();
-                break;
-
             case 'admin-agences':
-                $controller = new \App\Controllers\AdminController();
-                $controller->agences();
-                break;
-
             case 'admin-agence-create':
-                $controller = new \App\Controllers\AdminController();
-                $controller->agenceCreate();
-                break;
-
             case 'admin-agence-edit':
-                $controller = new \App\Controllers\AdminController();
-                $controller->agenceEdit();
-                break;
-
             case 'admin-agence-delete':
-                $controller = new \App\Controllers\AdminController();
-                $controller->agenceDelete();
-                break;
-
             case 'admin-trajets':
-                $controller = new \App\Controllers\AdminController();
-                $controller->trajets();
-                break;
-
             case 'admin-trajet-delete':
+
+                if (!Auth::isAdmin()) {
+                    header('Location: index.php?page=home');
+                    exit;
+                }
+
                 $controller = new \App\Controllers\AdminController();
-                $controller->trajetDelete();
+
+                if ($page === 'admin') $controller->dashboard();
+                if ($page === 'admin-users') $controller->users();
+                if ($page === 'admin-agences') $controller->agences();
+                if ($page === 'admin-agence-create') $controller->agenceCreate();
+                if ($page === 'admin-agence-edit') $controller->agenceEdit();
+                if ($page === 'admin-agence-delete') $controller->agenceDelete();
+                if ($page === 'admin-trajets') $controller->trajets();
+                if ($page === 'admin-trajet-delete') $controller->trajetDelete();
+
                 break;
 
 
             /* ============================
-               PAGE PAR DÉFAUT
+               PAGE 404
             ============================ */
 
             default:
-                $controller = new \App\Controllers\HomeController();
-                $controller->index();
+                http_response_code(404);
+                (new \App\Controllers\HomeController())->notFound();
                 break;
         }
     }
