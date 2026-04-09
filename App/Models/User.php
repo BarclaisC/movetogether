@@ -73,7 +73,7 @@ class User
     }
 
     /**
-     * Création d’un utilisateur (optionnel)
+     * Création d’un utilisateur 
      */
     public function create(array $data): bool
     {

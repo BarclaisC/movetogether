@@ -121,7 +121,7 @@ Le fichier `database/seed.sql` contient :
 
 ### Identifiants admin par défaut
 Email : admin@movetogether.fr 
-Mot de passe : password
+Mot de passe : Admin12
 
 
 

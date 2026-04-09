@@ -1,5 +1,5 @@
 <?php
-session_start(); // ⭐ OBLIGATOIRE POUR QUE LA CONNEXION FONCTIONNE
+session_start(); // POUR QUE LA CONNEXION FONCTIONNE
 
 // Autoload maison 
 spl_autoload_register(function ($class) {

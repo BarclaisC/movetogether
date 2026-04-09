@@ -7,10 +7,10 @@
     <!-- Titre dynamique -->
     <title><?= $this->title ?? 'MoveTogether' ?></title>
 
-    <!-- Meta description (pro) -->
+    <!-- Meta description -->
     <meta name="description" content="MoveTogether — Plateforme interne de covoiturage.">
 
-    <!-- Favicon (optionnel) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
 
     <!-- Bootstrap -->

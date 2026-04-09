@@ -8,7 +8,7 @@ use PDO;
 class Agence
 {
     /**
-     * Récupère toutes les agences (triées par ordre alphabétique)
+     * Récupère toutes les agences 
      */
     public function getAll(): array
     {

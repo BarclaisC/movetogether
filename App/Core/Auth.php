@@ -22,7 +22,7 @@ class Auth
     }
 
     /**
-     * Retourne l'ID de l'utilisateur connecté (optionnel)
+     * Retourne l'ID de l'utilisateur connecté 
      */
     public static function id(): ?int
     {
@@ -39,7 +39,7 @@ class Auth
     }
 
     /**
-     * Déconnexion propre (optionnel mais pro)
+     * Déconnexion propre 
      */
     public static function logout(): void
     {

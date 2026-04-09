@@ -60,7 +60,7 @@ INSERT INTO users (nom, prenom, email, telephone, password, role) VALUES
 ('Martin', 'Lucas', 'lucas.martin@example.com', '0698765432',
  '$2y$10$Qe0X9Q0pVxX3n0uY1Zp7UuYtYp8E9Q0pVxX3n0uY1Zp7UuYtYp8E', 'user');
 
--- Le mot de passe hashé correspond à : "password"
+-- Le mot de passe hashé correspond à : "Admin12"
 
 -- ============================================
 -- INSERTION DES AGENCES
